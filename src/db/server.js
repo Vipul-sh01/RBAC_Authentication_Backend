@@ -1,6 +1,6 @@
 import { Sequelize } from 'sequelize';
 import { DB_NAME } from '../constent.js'; 
-import UserModel from '../models/User.models.js'; 
+import {UserModel} from '../models/User.models.js'; 
 
 const sequelize = new Sequelize(DB_NAME, process.env.MYSQL_USER, process.env.MYSQL_PASSWORD, {
     host: process.env.MYSQL_HOST,

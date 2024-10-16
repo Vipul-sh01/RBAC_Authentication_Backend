@@ -31,7 +31,6 @@ const UserModel = (sequelize, DataTypes) => {
             role: {
                 type: DataTypes.ENUM('admin', 'user'),
                 allowNull: false,
-                defaultValue: 'user',
             },
         },
         {
@@ -73,4 +72,5 @@ const UserModel = (sequelize, DataTypes) => {
     return User;
 };
 
-export default UserModel;
+// export default UserModel;
+export { UserModel };
