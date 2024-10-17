@@ -7,7 +7,7 @@ import { Sequelize } from 'sequelize';
 import { fileURLToPath } from 'url';
 import configJSON from '../config/config.json' assert { type: 'json' };
 
-// Handle __dirname and __filename in ES modules
+
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
@@ -23,7 +23,7 @@ if (config.use_env_variable) {
   sequelize = new Sequelize(config.database, config.username, config.password, config);
 }
 
-// Read files and dynamically import models
+
 const modelFiles = fs
   .readdirSync(__dirname)
   .filter(
@@ -39,7 +39,7 @@ for (const file of modelFiles) {
   db[model.name] = model(sequelize, Sequelize.DataTypes);
 }
 
-// Setup model associations
+
 Object.keys(db).forEach((modelName) => {
   if (db[modelName].associate) {
     db[modelName].associate(db);

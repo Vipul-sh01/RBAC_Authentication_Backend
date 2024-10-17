@@ -1,9 +1,7 @@
 import { ApiError } from "../utils/ApiError.js";
 import { asyncHandler } from '../utils/asynchandler.js';
 import jwt from "jsonwebtoken";
-import { db } from '../db/server.js';
 
-const { User } = db;
 
 const verifyJWT = asyncHandler(async (req, res, next) => {
     const token = req.cookies?.accessToken || req.header("Authorization")?.replace("Bearer ", "");
