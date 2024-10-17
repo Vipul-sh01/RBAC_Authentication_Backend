@@ -18,11 +18,11 @@ app.use(express.static('public'));
 import userRouter from '../src/routers/user.routes.js';
 app.use('/api/v1/users', userRouter);
 
-import protectedRoutes from '../src/routers/protected.routes.js';
-app.use('/api/v1/admin', protectedRoutes);
+import adminprotectedRoutes from './routers/adminprotected.routes.js';
+app.use('/api/v1/admin', adminprotectedRoutes);
 
-import protectedRoute from '../src/routers/protected.routes.js';
-app.use('/api/v1/user', protectedRoute);
+import userprotectedRoute from './routers/userprotected.routes.js';
+app.use('/api/v1/user', userprotectedRoute);
 
 
 app.use((req, res, next) => {
