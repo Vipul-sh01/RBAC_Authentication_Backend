@@ -17,7 +17,7 @@ const roleAuth = (roles) => {
         }
 
         if (!roles.includes(user.role)) {
-            return next(new ApiError(403, "Forbidden: You do not have the required role"));
+            return next(new ApiError(403, "Access denied"));
         }
 
         next();

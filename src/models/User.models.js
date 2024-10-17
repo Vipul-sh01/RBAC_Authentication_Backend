@@ -1,4 +1,4 @@
-import bcrypt from 'bcrypt';
+import bcrypt from 'bcrypt'; 
 import jwt from 'jsonwebtoken';
 
 const UserModel = (sequelize, DataTypes) => {
@@ -37,7 +37,12 @@ const UserModel = (sequelize, DataTypes) => {
             tableName: 'Users',
             timestamps: true,
             hooks: {
-                beforeSave: async (user) => {
+                beforeCreate: async (user) => {
+                    if (user.password) {
+                        user.password = await bcrypt.hash(user.password, 10);
+                    }
+                },
+                beforeUpdate: async (user) => {
                     if (user.changed('password')) {
                         user.password = await bcrypt.hash(user.password, 10);
                     }
@@ -45,32 +50,40 @@ const UserModel = (sequelize, DataTypes) => {
             },
         }
     );
+
     User.prototype.isPasswordCorrect = async function (password) {
-        return await bcrypt.compare(password, this.password);
+        return bcrypt.compare(password, this.password);
     };
 
     User.prototype.generateAccessToken = function () {
-        return jwt.sign(
-            {
-                id: this.id,
-                username: this.username,
-                email: this.email,
-            },
-            process.env.ACCESS_TOKEN_SECRET,
-            { expiresIn: process.env.ACCESS_TOKEN_EXPIRY }
-        );
+        try {
+            return jwt.sign(
+                {
+                    id: this.id,
+                    username: this.username,
+                    role: this.role,
+                },
+                process.env.ACCESS_TOKEN_SECRET,
+                { expiresIn: process.env.ACCESS_TOKEN_EXPIRY || '1h' }
+            );
+        } catch (error) {
+            throw new Error('Failed to generate access token');
+        }
     };
 
     User.prototype.generateRefreshToken = function () {
-        return jwt.sign(
-            { id: this.id },
-            process.env.REFRESH_TOKEN_SECRET,
-            { expiresIn: process.env.REFRESH_TOKEN_EXPIRY }
-        );
+        try {
+            return jwt.sign(
+                { id: this.id },
+                process.env.REFRESH_TOKEN_SECRET,
+                { expiresIn: process.env.REFRESH_TOKEN_EXPIRY || '7d' }
+            );
+        } catch (error) {
+            throw new Error('Failed to generate refresh token');
+        }
     };
 
     return User;
 };
 
-// export default UserModel;
 export { UserModel };
